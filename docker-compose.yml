@@ -1,0 +1,16 @@
+version: '3.9'
+
+services:
+  rtmp:
+    build: ./
+    ports:
+      - "1935:1935"
+      - "8111:8111"
+    container_name: rtmp_server
+  
+networks:
+  laravel:
+    driver: bridge
+volumes:
+  es_data:
+    driver: local
