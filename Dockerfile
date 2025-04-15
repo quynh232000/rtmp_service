@@ -32,12 +32,13 @@ FROM tiangolo/nginx-rtmp
 # Copy cấu hình NGINX của bạn vào container
 COPY nginx.conf /etc/nginx/nginx.conf
 
+# Copy chứng chỉ SSL và private key vào container
+COPY ./selfsigned.crt /etc/ssl/certs/selfsigned.crt
+COPY ./selfsigned.key /etc/ssl/private/selfsigned.key
+
 # Tạo thư mục HLS và cấp quyền cho www-data
 RUN mkdir -p /var/www/html/hls && \
     chown -R www-data:www-data /var/www/html/hls && \
-    # Copy chứng chỉ SSL và private key
-    COPY ./selfsigned.crt /etc/ssl/certs/selfsigned.crt && \
-    COPY ./selfsigned.key /etc/ssl/private/selfsigned.key && \
     # Cài đặt cron để xóa file cũ hơn 1 giờ
     apt-get update && \
     apt-get install -y cron && \
@@ -46,4 +47,5 @@ RUN mkdir -p /var/www/html/hls && \
 
 # Khởi động cron và nginx
 CMD service cron start && nginx -g 'daemon off;'
+
 
